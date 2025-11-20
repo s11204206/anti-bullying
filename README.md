@@ -130,6 +130,25 @@ Files:
   --accent:#2b8cff;
   --muted:#6b7280;
 }
+<input type="text" id="message" placeholder="輸入訊息…">
+<button onclick="sendMessage()">送出</button>
+
+<div id="reply"></div>
+
+<script>
+async function sendMessage() {
+const userMessage = document.getElementById("message").value;
+
+const response = await fetch("https://bullying-bot.onrender.com/reply", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ message: userMessage })
+});
+
+const data = await response.json();
+document.getElementById("reply").innerText = data.reply;
+}
+</script>
 *{box-sizing:border-box}
 body{font-family:Inter, system-ui, -apple-system, 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif; margin:0; background:var(--bg); color:#111}
 .container{max-width:980px;margin:0 auto;padding:24px}
