@@ -1,4 +1,4 @@
-# anti-bullying
+
 <!--
 Repository template: "anti-bullying-site"
 Updated: 增加前端聊天機器人 (Chat Widget)
@@ -15,7 +15,7 @@ Files:
 - images/ (folder with placeholder images)
 -->
 
-<!-- index.html -->
+
 <!doctype html>
 <html lang="zh-Hant">
 <head>
