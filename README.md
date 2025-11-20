@@ -42,7 +42,7 @@ Files:
 
   <main class="container">
     <section id="about" class="card">
-      <h2>關於反霸凌</h2>
+      <h1>關於反霸凌</h1>
       <p>霸凌會對身心造成長期影響。我們的目標是提供受害者、目擊者與教育工作者實用資訊與即時支援。</p>
       <ul>
         <li>定義霸凌：身體、語言、網路、社交排擠等行為。</li>
