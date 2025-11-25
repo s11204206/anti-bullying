@@ -49,12 +49,7 @@ Files:
         <li>如何幫助被害者：傾聽、紀錄、協助通知家長/學校。</li>
         <li>為教育者提供介入步驟與防治計畫範本。</li>
       </ul>
-      // === 把 1000 字「反霸凌心靈雞湯」加入網站的程式 (貼到 script.js) ===
-
-// 如果你已有 script.js 的其他程式，請把這段加入檔案末尾（不要覆寫原有程式）。
-(function(){
-  // 文章內容（請勿刪除此段內容，已包含換行）
-  const essayText = `
+     
 在每一所學校裡，都有許多故事正在發生。有的讓人開心，有的讓人難過，而其中最讓人心痛的，往往不是大事件，
 而是一句輕描淡寫的嘲笑、一個刻意忽視的眼神、一次被排除的小組活動。霸凌不一定會很吵，它可以非常安靜、
 非常日常、甚至安靜到連當事人都開始懷疑：「是不是我不夠好？」但其實——你知道的，你值得被善待。
@@ -91,94 +86,7 @@ Files:
 這個世界需要你這樣的人。
 你值得被尊重、被看見、被珍惜。
 願你永遠不要懷疑自己的光。
-`.trim();
 
-  // 目標插入位置：在 <section id="resources"> 之後加入一個新的 article（如果找不到 resources，插到 main 末尾）
-  const resourcesSection = document.getElementById('resources');
-  const mainEl = document.querySelector('main.container');
-
-  // 建立外層卡片
-  const container = document.createElement('section');
-  container.className = 'card';
-  container.id = 'anti-bullying-essay';
-
-  // 文章 header
-  const h2 = document.createElement('h2');
-  h2.textContent = '反霸凌心靈雞湯（全文）';
-  container.appendChild(h2);
-
-  // 加示範圖片（使用你上傳的本地檔案路徑作為示範 URL，系統會轉換）
-  const img = document.createElement('img');
-  img.alt = '示意圖';
-  img.style.maxWidth = '200px';
-  img.style.display = 'block';
-  img.style.marginBottom = '12px';
-  // 這個路徑會由系統處理並轉成可用的 URL
-  img.src = '/mnt/data/edbb8439-877b-41f4-b99f-2561c99449fa.png';
-  container.appendChild(img);
-
-  // 顯示/隱藏按鈕
-  const toggleBtn = document.createElement('button');
-  toggleBtn.textContent = '顯示全文';
-  toggleBtn.style.marginRight = '8px';
-  container.appendChild(toggleBtn);
-
-  // 下載按鈕
-  const downloadBtn = document.createElement('button');
-  downloadBtn.textContent = '下載全文 (.txt)';
-  container.appendChild(downloadBtn);
-
-  // 文章內容區（起初隱藏）
-  const articleDiv = document.createElement('div');
-  articleDiv.style.display = 'none';
-  articleDiv.style.whiteSpace = 'pre-wrap'; // 保持換行
-  articleDiv.style.marginTop = '12px';
-  articleDiv.className = 'essay-body muted';
-  articleDiv.textContent = essayText;
-  container.appendChild(articleDiv);
-
-  // 插入位置
-  if (resourcesSection && resourcesSection.parentNode) {
-    resourcesSection.parentNode.insertBefore(container, resourcesSection.nextSibling);
-  } else if (mainEl) {
-    mainEl.appendChild(container);
-  } else {
-    document.body.appendChild(container);
-  }
-
-  // 按鈕事件：顯示/隱藏
-  toggleBtn.addEventListener('click', () => {
-    if (articleDiv.style.display === 'none') {
-      articleDiv.style.display = 'block';
-      toggleBtn.textContent = '隱藏全文';
-      // 捲動到文章
-      articleDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else {
-      articleDiv.style.display = 'none';
-      toggleBtn.textContent = '顯示全文';
-    }
-  });
-
-  // 下載功能：把 essayText 變成 .txt 下載
-  downloadBtn.addEventListener('click', () => {
-    const blob = new Blob([essayText], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = '反霸凌心靈雞湯.txt';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  });
-
-  // 小提示樣式（如果你需要更好看可在 styles.css 加強）
-  const info = document.createElement('p');
-  info.className = 'muted small';
-  info.textContent = '（提示：若想把文章放到特定頁面或改字體、顏色，告訴我我可以幫你美化）';
-  container.appendChild(info);
-
-})();
     </section>
 
     <section id="resources" class="card">
