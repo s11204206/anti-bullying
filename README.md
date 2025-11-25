@@ -49,6 +49,136 @@ Files:
         <li>如何幫助被害者：傾聽、紀錄、協助通知家長/學校。</li>
         <li>為教育者提供介入步驟與防治計畫範本。</li>
       </ul>
+      // === 把 1000 字「反霸凌心靈雞湯」加入網站的程式 (貼到 script.js) ===
+
+// 如果你已有 script.js 的其他程式，請把這段加入檔案末尾（不要覆寫原有程式）。
+(function(){
+  // 文章內容（請勿刪除此段內容，已包含換行）
+  const essayText = `
+在每一所學校裡，都有許多故事正在發生。有的讓人開心，有的讓人難過，而其中最讓人心痛的，往往不是大事件，
+而是一句輕描淡寫的嘲笑、一個刻意忽視的眼神、一次被排除的小組活動。霸凌不一定會很吵，它可以非常安靜、
+非常日常、甚至安靜到連當事人都開始懷疑：「是不是我不夠好？」但其實——你知道的，你值得被善待。
+
+人生在這條路上，每個人都有看不見的戰鬥。我們無法選擇自己的家庭、長相、成績，也不能決定別人怎麼看待我們。
+但我們能選擇自己的態度，也能選擇是否成為一個讓世界更溫暖的人。也許你曾經被說過難聽的話、被排擠、被誤會；
+也許你在某些時候真的覺得孤單。但你要知道，孤單不是你的錯，被欺負更不是你的錯。你沒有需要迎合誰，也沒有必要為了某些人的惡意去質疑自己的價值。
+
+你的價值，從來不是由別人的嘴巴決定，而是由你自己的心決定。
+
+有時候，霸凌來自無知；有時候，它來自跟風；有時候，它只是一群人為了感覺強大而選擇傷害比他們弱的人。
+但力量不是用來踩人的，真正強大的人是會伸手把別人拉起來的那種人。真正的勇氣不是吼叫，而是選擇不跟著傷害。
+真正的成熟不是冷漠，而是看見別人的痛後能伸出手說：「我在。」
+
+如果你正在承受傷害，請記得：你不是一個人。世界上有很多人願意站在你這邊，包括老師、朋友、家人，甚至你不認識的那些善良的人們。
+他們願意聽你說、願意陪你走過黑暗。你不需要默默忍耐，也不用裝得沒事。求助不是軟弱，而是保護自己的勇氣。
+
+如果你曾經在旁邊看見霸凌，卻不知道該怎麼辦，也不要責怪自己。我們每個人都在學習成為更好的人。
+下一次，你可以試著做一件小小的事——挺身而出、告訴老師、或是簡單地陪伴被霸凌的人。你的一個動作，可能就能改變另一個人的世界。
+
+如果你曾經無意間傷害了別人，不代表你是壞人。每個人都會犯錯，重要的是你願意停下來，看見自己的行為，然後做出改變。
+道歉不是丟臉，而是勇氣；反省不是責備自己，而是讓自己變得更溫柔的練習。
+
+我們都希望被理解、被接納、被看見、被喜歡。而最漂亮、最自由的樣子，就是當你不需要偽裝、不需要討好，也能好好做自己。
+世界不必完美，但你可以選擇成為那個溫柔的光，就像黑夜裡的一盞燈，讓迷路的人找到方向。
+
+願所有正在受傷的人，都能被溫柔包圍。
+願每一個感到孤單的心，都能再次被理解與支持照亮。
+願每一個選擇善良的人，都能證明：「善良不是弱，而是力量。」
+
+不要忘記，你正在走的路很珍貴，你的存在本身就值得被愛。
+無論你現在在哪裡，無論你正在經歷什麼，請記住一件事：
+
+這個世界需要你這樣的人。
+你值得被尊重、被看見、被珍惜。
+願你永遠不要懷疑自己的光。
+`.trim();
+
+  // 目標插入位置：在 <section id="resources"> 之後加入一個新的 article（如果找不到 resources，插到 main 末尾）
+  const resourcesSection = document.getElementById('resources');
+  const mainEl = document.querySelector('main.container');
+
+  // 建立外層卡片
+  const container = document.createElement('section');
+  container.className = 'card';
+  container.id = 'anti-bullying-essay';
+
+  // 文章 header
+  const h2 = document.createElement('h2');
+  h2.textContent = '反霸凌心靈雞湯（全文）';
+  container.appendChild(h2);
+
+  // 加示範圖片（使用你上傳的本地檔案路徑作為示範 URL，系統會轉換）
+  const img = document.createElement('img');
+  img.alt = '示意圖';
+  img.style.maxWidth = '200px';
+  img.style.display = 'block';
+  img.style.marginBottom = '12px';
+  // 這個路徑會由系統處理並轉成可用的 URL
+  img.src = '/mnt/data/edbb8439-877b-41f4-b99f-2561c99449fa.png';
+  container.appendChild(img);
+
+  // 顯示/隱藏按鈕
+  const toggleBtn = document.createElement('button');
+  toggleBtn.textContent = '顯示全文';
+  toggleBtn.style.marginRight = '8px';
+  container.appendChild(toggleBtn);
+
+  // 下載按鈕
+  const downloadBtn = document.createElement('button');
+  downloadBtn.textContent = '下載全文 (.txt)';
+  container.appendChild(downloadBtn);
+
+  // 文章內容區（起初隱藏）
+  const articleDiv = document.createElement('div');
+  articleDiv.style.display = 'none';
+  articleDiv.style.whiteSpace = 'pre-wrap'; // 保持換行
+  articleDiv.style.marginTop = '12px';
+  articleDiv.className = 'essay-body muted';
+  articleDiv.textContent = essayText;
+  container.appendChild(articleDiv);
+
+  // 插入位置
+  if (resourcesSection && resourcesSection.parentNode) {
+    resourcesSection.parentNode.insertBefore(container, resourcesSection.nextSibling);
+  } else if (mainEl) {
+    mainEl.appendChild(container);
+  } else {
+    document.body.appendChild(container);
+  }
+
+  // 按鈕事件：顯示/隱藏
+  toggleBtn.addEventListener('click', () => {
+    if (articleDiv.style.display === 'none') {
+      articleDiv.style.display = 'block';
+      toggleBtn.textContent = '隱藏全文';
+      // 捲動到文章
+      articleDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      articleDiv.style.display = 'none';
+      toggleBtn.textContent = '顯示全文';
+    }
+  });
+
+  // 下載功能：把 essayText 變成 .txt 下載
+  downloadBtn.addEventListener('click', () => {
+    const blob = new Blob([essayText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '反霸凌心靈雞湯.txt';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  // 小提示樣式（如果你需要更好看可在 styles.css 加強）
+  const info = document.createElement('p');
+  info.className = 'muted small';
+  info.textContent = '（提示：若想把文章放到特定頁面或改字體、顏色，告訴我我可以幫你美化）';
+  container.appendChild(info);
+
+})();
     </section>
 
     <section id="resources" class="card">
