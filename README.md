@@ -191,7 +191,7 @@ Files:
         addMessage(message, 'user');
         userInput.value = '';
         sendButton.disabled = true; // 發送時禁用按鈕
-
+        API_ENDPOINT = 'https://anti-bullying-azsd.vercel.app/api/chat';
         try {
             // 呼叫 Vercel Serverless Function
             const response = await fetch(API_ENDPOINT, {
@@ -232,15 +232,7 @@ Files:
 
 </body>
 </html>
-      <div id="chat-widget">
-        <div id="messages" aria-live="polite"></div>
-        <div id="input-area">
-          <input id="chat-input" type="text" placeholder="輸入訊息，例如：我在學校被欺負了..." />
-          <button id="send-btn">送出</button>
-        </div>
-        <p class="muted small">提示：此版範本採用後端代理呼叫 AI 服務以保護 API Key。請部署後端到 Cloud Run / Vercel / Firebase Functions。</p>
-      </div>
-    </section>
+     
 
    
       <h2>聯絡我們</h2>
