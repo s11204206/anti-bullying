@@ -5,9 +5,9 @@
   "main": "api/chat.js",
   "scripts": {
     "start": "node api/chat.js"
+    "type": "module"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "@google/genai": "0.1.0" 
+    "@google/genai": "^0.1.0" 
   }
 }
