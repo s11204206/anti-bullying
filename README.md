@@ -89,7 +89,7 @@ Files:
 <h1>願你永遠不要懷疑自己的光。</h1>
 <font color = black>
 
-    </section>
+   
 
     <section id="resources" class="card">
       <h2>實用資源</h2>
