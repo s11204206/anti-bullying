@@ -3,11 +3,8 @@
   "version": "1.0.0",
   "description": "Gemini Chat API via Vercel Serverless Function",
   "main": "api/chat.js",
-  "scripts": {
-    "start": "node api/chat.js"
-    "type": "module"
-  },
+  "type": "module",  <-- **請確保這一行有逗號在前面**
   "dependencies": {
-    "@google/genai": "^0.1.0" 
+    "@google/genai": "^0.1.0"
   }
 }
