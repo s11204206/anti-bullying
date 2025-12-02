@@ -171,7 +171,7 @@ Files:
 
     // **這是您的 Vercel Serverless Function 的 URL**
     // 部署後，它的 URL 會是：https://您的Vercel網域/api/chat
-    const API_ENDPOINT = '/api/chat'; 
+   const API_ENDPOINT = 'https://anti-bullying-azsd.vercel.app/api/chat';
 
     // 新增訊息到聊天框
     function addMessage(text, sender) {
@@ -191,7 +191,7 @@ Files:
         addMessage(message, 'user');
         userInput.value = '';
         sendButton.disabled = true; // 發送時禁用按鈕
-        API_ENDPOINT = 'https://anti-bullying-azsd.vercel.app/api/chat';
+        
         try {
             // 呼叫 Vercel Serverless Function
             const response = await fetch(API_ENDPOINT, {
