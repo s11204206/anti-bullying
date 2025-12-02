@@ -3,7 +3,6 @@
 
 // 載入 Google Gen AI SDK
 import { GoogleGenAI } from '@google/genai';
-
 // 1. 初始化 GoogleGenAI 客戶端
 // Vercel 會自動從環境變數 GEMINI_API_KEY 獲取金鑰，非常安全！
 const ai = new GoogleGenAI({});
