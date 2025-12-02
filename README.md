@@ -130,7 +130,108 @@ Files:
     <section id="chat" class="card">
       <h2>線上支援聊天機器人</h2>
       <p>跟我們的 AI 聊天機器人聊聊你的困擾（提示：不要在對話中提供個人敏感資料）。</p>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini AI 聊天小工具</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .chat-container { width: 400px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; max-height: 80vh; }
+        .chat-header { padding: 15px; background-color: #4A90E2; color: white; border-top-left-radius: 8px; border-top-right-radius: 8px; font-weight: bold; }
+        #chat-box { flex-grow: 1; padding: 15px; overflow-y: auto; border-bottom: 1px solid #eee; }
+        .message { margin-bottom: 10px; padding: 8px 12px; border-radius: 18px; max-width: 80%; }
+        .user-message { background-color: #D6EAF8; margin-left: auto; text-align: right; }
+        .ai-message { background-color: #EAECEE; margin-right: auto; text-align: left; }
+        .input-area { display: flex; padding: 10px; border-top: 1px solid #eee; }
+        #user-input { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 20px; margin-right: 10px; }
+        #send-button { padding: 10px 15px; background-color: #4A90E2; color: white; border: none; border-radius: 20px; cursor: pointer; transition: background-color 0.3s; }
+        #send-button:hover:not(:disabled) { background-color: #357ABD; }
+        #send-button:disabled { background-color: #AAB7B8; cursor: not-allowed; }
+    </style>
+</head>
+<body>
 
+<div class="chat-container">
+    <div class="chat-header">Gemini AI 聊天室</div>
+    <div id="chat-box">
+        <div class="message ai-message">哈囉！我是您的 AI 助手，請問有什麼可以為您服務的嗎？</div>
+    </div>
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="請輸入您的訊息..." autofocus>
+        <button id="send-button">發送</button>
+    </div>
+</div>
+
+<script>
+    const chatBox = document.getElementById('chat-box');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+
+    // **這是您的 Vercel Serverless Function 的 URL**
+    // 部署後，它的 URL 會是：https://您的Vercel網域/api/chat
+    const API_ENDPOINT = '/api/chat'; 
+
+    // 新增訊息到聊天框
+    function addMessage(text, sender) {
+        const msgElement = document.createElement('div');
+        msgElement.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
+        msgElement.textContent = text;
+        chatBox.appendChild(msgElement);
+        // 保持捲動到底部
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // 發送訊息給後端 Serverless Function
+    async function sendMessage() {
+        const message = userInput.value.trim();
+        if (message === '') return;
+
+        addMessage(message, 'user');
+        userInput.value = '';
+        sendButton.disabled = true; // 發送時禁用按鈕
+
+        try {
+            // 呼叫 Vercel Serverless Function
+            const response = await fetch(API_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP 錯誤: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            // 顯示 AI 回覆
+            addMessage(data.reply || '抱歉，AI 似乎沒有回覆。', 'ai');
+
+        } catch (error) {
+            console.error('發送訊息失敗:', error);
+            addMessage('連線錯誤：無法聯繫 AI 服務。', 'ai');
+        } finally {
+            sendButton.disabled = false; // 啟用按鈕
+            userInput.focus();
+        }
+    }
+
+    // 綁定事件
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !sendButton.disabled) {
+            sendMessage();
+        }
+    });
+
+</script>
+
+</body>
+</html>
       <div id="chat-widget">
         <div id="messages" aria-live="polite"></div>
         <div id="input-area">
@@ -141,7 +242,7 @@ Files:
       </div>
     </section>
 
-    <section id="contact" class="card">
+   
       <h2>聯絡我們</h2>
       <p>若需要協助或想合作，請透過以下方式聯絡。</p>
       <ul>
