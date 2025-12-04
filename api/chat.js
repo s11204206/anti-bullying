@@ -46,3 +46,40 @@ export default async function handler(request, response) {
     response.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
+// ... (程式碼開頭)
+import { GoogleGenAI } from '@google/genai';
+
+// 從 Vercel 環境變數讀取安全設定
+const USERNAME = process.env.AUTH_USERNAME;
+const PASSWORD = process.env.AUTH_PASSWORD;
+
+// Vercel Serverless Function 的主要處理函式
+export default async function handler(request, response) {
+    // 檢查 Basic Auth 標頭
+    const authHeader = request.headers.authorization;
+
+    if (!authHeader || authHeader.indexOf('Basic ') === -1) {
+        // 如果沒有授權標頭，要求瀏覽器彈出登入框
+        response.status(401).setHeader('WWW-Authenticate', 'Basic realm="Secure Area"').send('Unauthorized');
+        return;
+    }
+
+    // 解析 Base64 編碼的帳號密碼
+    const credentials = Buffer.from(authHeader.split(' ')[1], 'base64').toString();
+    const [user, pass] = credentials.split(':');
+
+    // 驗證帳號密碼
+    if (user !== USERNAME || pass !== PASSWORD) {
+        response.status(401).setHeader('WWW-Authenticate', 'Basic realm="Secure Area"').send('Invalid Credentials');
+        return;
+    }
+
+    // ... (如果驗證通過，執行原有的 Gemini 聊天邏輯)
+    // 您的原有 Gemini 程式碼從這裡開始：
+    if (request.method !== 'POST') {
+        response.status(405).send('Method Not Allowed');
+        return;
+    }
+    // ...
+}
