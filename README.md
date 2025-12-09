@@ -135,174 +135,99 @@ Files:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini AI 萬用版</title>
+    <title>Gemini AI 聊天小工具</title>
     <style>
-        body { font-family: "Microsoft JhengHei", sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { width: 400px; background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 85vh; }
-        
-        /* 設定區域 */
-        #setup-panel { padding: 20px; background: #fff; z-index: 10; border-bottom: 1px solid #ddd; }
-        #api-input { width: 100%; padding: 10px; border: 2px solid #4285F4; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; }
-        #save-btn { width: 100%; padding: 10px; background: #4285F4; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        #save-btn:hover { background: #3367D6; }
-        .error-msg { color: red; font-size: 12px; margin-top: 5px; display: none; }
-
-        /* 聊天區域 */
-        #chat-interface { display: flex; flex-direction: column; flex-grow: 1; opacity: 0.3; pointer-events: none; transition: 0.3s; }
-        .active-chat { opacity: 1 !important; pointer-events: all !important; }
-        
-        .header { background: #4285F4; color: white; padding: 15px; text-align: center; font-weight: bold; }
-        #chat-box { flex-grow: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; }
-        .message { margin-bottom: 12px; padding: 10px 14px; border-radius: 18px; max-width: 80%; line-height: 1.5; word-wrap: break-word; font-size: 14px; }
-        .user { background: #d2e3fc; margin-left: auto; color: #333; }
-        .ai { background: #ffffff; margin-right: auto; border: 1px solid #e0e0e0; color: #333; }
-        .input-area { padding: 10px; background: white; border-top: 1px solid #eee; display: flex; }
-        #user-msg { flex-grow: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
-        #send-btn { margin-left: 10px; padding: 10px 20px; background: #4285F4; color: white; border: none; border-radius: 20px; cursor: pointer; }
-        
-        #loading { font-size: 12px; color: #666; text-align: center; padding: 5px; display: none; }
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .chat-container { width: 400px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; max-height: 80vh; }
+        .chat-header { padding: 15px; background-color: #4A90E2; color: white; border-top-left-radius: 8px; border-top-right-radius: 8px; font-weight: bold; }
+        #chat-box { flex-grow: 1; padding: 15px; overflow-y: auto; border-bottom: 1px solid #eee; }
+        .message { margin-bottom: 10px; padding: 8px 12px; border-radius: 18px; max-width: 80%; }
+        .user-message { background-color: #D6EAF8; margin-left: auto; text-align: right; }
+        .ai-message { background-color: #EAECEE; margin-right: auto; text-align: left; }
+        .input-area { display: flex; padding: 10px; border-top: 1px solid #eee; }
+        #user-input { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 20px; margin-right: 10px; }
+        #send-button { padding: 10px 15px; background-color: #4A90E2; color: white; border: none; border-radius: 20px; cursor: pointer; transition: background-color 0.3s; }
+        #send-button:hover:not(:disabled) { background-color: #357ABD; }
+        #send-button:disabled { background-color: #AAB7B8; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="setup-panel">
-        <div style="font-weight:bold; margin-bottom:5px;">第一步：請貼上 API Key</div>
-        <input type="text" id="api-input" placeholder="貼上 AIza 開頭的金鑰..." value="">
-        <button id="save-btn">驗證並開始聊天</button>
-        <div id="status-msg" class="error-msg"></div>
+<div class="chat-container">
+    <div class="chat-header">Gemini AI 聊天室</div>
+    <div id="chat-box">
+        <div class="message ai-message">哈囉！我是您的 AI 助手，請問有什麼可以為您服務的嗎？</div>
     </div>
-
-    <div id="chat-interface">
-        <div class="header" id="model-display">Gemini AI</div>
-        <div id="chat-box">
-            <div class="message ai">請先在上方貼上金鑰，我才能開始工作喔！</div>
-        </div>
-        <div id="loading">思考中...</div>
-        <div class="input-area">
-            <input type="text" id="user-msg" placeholder="輸入訊息...">
-            <button id="send-btn">發送</button>
-        </div>
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="請輸入您的訊息..." autofocus>
+        <button id="send-button">發送</button>
     </div>
 </div>
 
 <script>
-    let currentKey = "";
-    let validModel = "gemini-1.5-flash"; // 預設模型
-
-    const setupPanel = document.getElementById('setup-panel');
-    const apiInput = document.getElementById('api-input');
-    const saveBtn = document.getElementById('save-btn');
-    const statusMsg = document.getElementById('status-msg');
-    const chatInterface = document.getElementById('chat-interface');
-    const modelDisplay = document.getElementById('model-display');
     const chatBox = document.getElementById('chat-box');
-    const userMsg = document.getElementById('user-msg');
-    const sendBtn = document.getElementById('send-btn');
-    const loading = document.getElementById('loading');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
 
-    // 自動填入您上次截圖的金鑰 (方便您測試，不對也可以直接改)
-    apiInput.value = "AIzaSyB0wul19Y9gFbjlliZorSLmY_HiGl5izN4";
+    // **這是您的 Vercel Serverless Function 的 URL**
+    // 部署後，它的 URL 會是：https://您的Vercel網域/api/chat
+    const API_ENDPOINT = '/api/chat'; 
 
-    function showStatus(msg, isError = true) {
-        statusMsg.style.display = 'block';
-        statusMsg.style.color = isError ? 'red' : 'green';
-        statusMsg.textContent = msg;
-    }
-
-    function addMsg(text, type) {
-        const div = document.createElement('div');
-        div.className = `message ${type}`;
-        div.innerHTML = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-        chatBox.appendChild(div);
+    // 新增訊息到聊天框
+    function addMessage(text, sender) {
+        const msgElement = document.createElement('div');
+        msgElement.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
+        msgElement.textContent = text;
+        chatBox.appendChild(msgElement);
+        // 保持捲動到底部
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // 驗證金鑰與自動尋找可用模型
-    async function validateKey() {
-        const key = apiInput.value.trim();
-        if (!key) return showStatus("請輸入金鑰！");
-        
-        saveBtn.disabled = true;
-        saveBtn.textContent = "正在測試連線...";
-        statusMsg.style.display = 'none';
-
-        // 測試的模型列表 (優先試 Flash，不行試 Pro)
-        const modelsToTry = ["gemini-1.5-flash", "gemini-pro", "gemini-1.0-pro"];
-        
-        for (let model of modelsToTry) {
-            try {
-                console.log(`Trying model: ${model}`);
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Hi" }] }] })
-                });
-
-                const data = await res.json();
-
-                if (res.ok) {
-                    // 成功了！
-                    currentKey = key;
-                    validModel = model;
-                    
-                    showStatus(`✅ 成功！已連接模型：${model}`, false);
-                    setTimeout(() => {
-                        setupPanel.style.display = 'none'; // 隱藏設定區
-                        chatInterface.classList.add('active-chat');
-                        modelDisplay.textContent = `Gemini AI (${model})`;
-                        addMsg("你好！連線成功，我現在可以回答你的問題了！", "ai");
-                    }, 1000);
-                    return;
-                } else {
-                    // 如果是 404 (找不到模型)，就換下一個模型試試
-                    if (res.status !== 404) {
-                        throw new Error(data.error?.message || "Key Error");
-                    }
-                }
-            } catch (e) {
-                console.error(e);
-                if (model === modelsToTry[modelsToTry.length - 1]) {
-                    showStatus("❌ 連線失敗：" + (e.message.includes("API key not valid") ? "金鑰無效 (請檢查有無空格)" : e.message));
-                }
-            }
-        }
-        saveBtn.disabled = false;
-        saveBtn.textContent = "驗證並開始聊天";
-    }
-
+    // 發送訊息給後端 Serverless Function
     async function sendMessage() {
-        const text = userMsg.value.trim();
-        if (!text) return;
-        
-        addMsg(text, "user");
-        userMsg.value = '';
-        loading.style.display = 'block';
-        sendBtn.disabled = true;
+        const message = userInput.value.trim();
+        if (message === '') return;
+
+        addMessage(message, 'user');
+        userInput.value = '';
+        sendButton.disabled = true; // 發送時禁用按鈕
 
         try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${validModel}:generateContent?key=${currentKey}`, {
+            // 呼叫 Vercel Serverless Function
+            const response = await fetch(API_ENDPOINT, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ contents: [{ parts: [{ text: text }] }] })
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message })
             });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error?.message || "Error");
+
+            if (!response.ok) {
+                throw new Error(`HTTP 錯誤: ${response.status}`);
+            }
+
+            const data = await response.json();
             
-            const reply = data.candidates[0].content.parts[0].text;
-            addMsg(reply, "ai");
-        } catch (e) {
-            addMsg("發生錯誤：" + e.message, "ai");
+            // 顯示 AI 回覆
+            addMessage(data.reply || '抱歉，AI 似乎沒有回覆。', 'ai');
+
+        } catch (error) {
+            console.error('發送訊息失敗:', error);
+            addMessage('連線錯誤：無法聯繫 AI 服務。', 'ai');
         } finally {
-            loading.style.display = 'none';
-            sendBtn.disabled = false;
-            userMsg.focus();
+            sendButton.disabled = false; // 啟用按鈕
+            userInput.focus();
         }
     }
 
-    saveBtn.addEventListener('click', validateKey);
-    sendBtn.addEventListener('click', sendMessage);
-    userMsg.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendMessage(); });
+    // 綁定事件
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !sendButton.disabled) {
+            sendMessage();
+        }
+    });
+
 </script>
 
 </body>
