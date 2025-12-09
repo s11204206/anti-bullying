@@ -135,91 +135,330 @@ Files:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini AI 聊天小工具</title>
+    <title>Gemini AI Chat Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .chat-container { width: 400px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; max-height: 80vh; }
-        .chat-header { padding: 15px; background-color: #4A90E2; color: white; border-top-left-radius: 8px; border-top-right-radius: 8px; font-weight: bold; }
-        #chat-box { flex-grow: 1; padding: 15px; overflow-y: auto; border-bottom: 1px solid #eee; }
-        .message { margin-bottom: 10px; padding: 8px 12px; border-radius: 18px; max-width: 80%; }
-        .user-message { background-color: #D6EAF8; margin-left: auto; text-align: right; }
-        .ai-message { background-color: #EAECEE; margin-right: auto; text-align: left; }
-        .input-area { display: flex; padding: 10px; border-top: 1px solid #eee; }
-        #user-input { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 20px; margin-right: 10px; }
-        #send-button { padding: 10px 15px; background-color: #4A90E2; color: white; border: none; border-radius: 20px; cursor: pointer; transition: background-color 0.3s; }
-        #send-button:hover:not(:disabled) { background-color: #357ABD; }
-        #send-button:disabled { background-color: #AAB7B8; cursor: not-allowed; }
+        :root {
+            --primary-color: #4285F4;
+            --bg-color: #f0f2f5;
+            --chat-bg: #ffffff;
+            --user-msg-bg: #e3effd;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--chat-bg);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+            max-height: 800px;
+        }
+
+        /* 設定面板樣式 */
+        #config-panel {
+            padding: 20px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+        
+        .api-input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        input#api-key {
+            flex-grow: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input#api-key:focus {
+            border-color: var(--primary-color);
+        }
+
+        button#start-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button#start-btn:disabled {
+            background: #ccc;
+        }
+
+        /* 聊天區域樣式 */
+        .header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        #chat-box {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            font-size: 15px;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .ai-message {
+            background: #f1f3f4;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message {
+            background: var(--user-msg-bg);
+            color: #1f1f1f;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Markdown 樣式簡單處理 */
+        .message b { font-weight: 700; }
+        .message code { background: #e0e0e0; padding: 2px 4px; border-radius: 4px; font-family: monospace; }
+
+        /* 輸入區域 */
+        .input-area {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            background: #fff;
+        }
+
+        #user-input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            outline: none;
+        }
+
+        #send-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #loading {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 隱藏聊天室直到 Key 驗證通過 */
+        #chat-interface {
+            display: none;
+            flex-direction: column;
+            flex-grow: 1;
+        }
     </style>
 </head>
 <body>
 
-<div class="chat-container">
-    <div class="chat-header">Gemini AI 聊天室</div>
-    <div id="chat-box">
-        <div class="message ai-message">哈囉！我是您的 AI 助手，請問有什麼可以為您服務的嗎？</div>
+<div class="container">
+    <div id="config-panel">
+        <h3 style="margin: 0 0 10px 0;">Gemini AI 設定</h3>
+        <p style="font-size: 14px; color: #666; margin: 0;">請輸入您的 Google API Key 以開始對話</p>
+        <div class="api-input-group">
+            <input type="password" id="api-key" placeholder="貼上 AIza 開頭的金鑰..." />
+            <button id="start-btn">連線</button>
+        </div>
+        <p id="status-msg" style="font-size: 12px; margin-top: 8px; color: red;"></p>
     </div>
-    <div class="input-area">
-        <input type="text" id="user-input" placeholder="請輸入您的訊息..." autofocus>
-        <button id="send-button">發送</button>
+
+    <div id="chat-interface">
+        <div class="header" id="model-name">Gemini AI</div>
+        <div id="chat-box">
+            <div class="message ai-message">你好！我已經準備好了，請問今天有什麼我可以幫你的嗎？</div>
+        </div>
+        <div id="loading">Gemini 正在思考中...</div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="輸入訊息..." />
+            <button id="send-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 2L11 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
     </div>
 </div>
 
 <script>
+    let currentKey = "";
+    let currentModel = "gemini-1.5-flash"; // 預設嘗試模型
+
+    const configPanel = document.getElementById('config-panel');
+    const chatInterface = document.getElementById('chat-interface');
+    const apiKeyInput = document.getElementById('api-key');
+    const startBtn = document.getElementById('start-btn');
+    const statusMsg = document.getElementById('status-msg');
+    
     const chatBox = document.getElementById('chat-box');
     const userInput = document.getElementById('user-input');
-    const sendButton = document.getElementById('send-button');
+    const sendBtn = document.getElementById('send-btn');
+    const loadingIndicator = document.getElementById('loading');
+    const modelNameDisplay = document.getElementById('model-name');
 
-    // **重要提醒**：這個網址如果是別人的範例，可能隨時會失效。
-    // 如果修好代碼後出現「連線錯誤」，代表您需要換一個有效的後端網址。
-    const API_ENDPOINT = 'https://anti-bullying-azsd.vercel.app/api/chat';
+    // 1. 驗證金鑰功能
+    async function validateAndStart() {
+        const key = apiKeyInput.value.trim();
+        if (!key) {
+            statusMsg.textContent = "請輸入金鑰！";
+            return;
+        }
 
-    function addMessage(text, sender) {
-        const msgElement = document.createElement('div');
-        msgElement.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
-        msgElement.textContent = text;
-        chatBox.appendChild(msgElement);
+        startBtn.disabled = true;
+        startBtn.textContent = "驗證中...";
+        statusMsg.textContent = "";
+
+        // 測試的模型列表 (解決 404 問題)
+        const models = ["gemini-1.5-flash", "gemini-pro", "gemini-1.0-pro"];
+        let success = false;
+
+        for (const model of models) {
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Hi" }] }] })
+                });
+
+                if (response.ok) {
+                    success = true;
+                    currentKey = key;
+                    currentModel = model;
+                    break; // 找到可用的模型就停止
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        if (success) {
+            configPanel.style.display = "none";
+            chatInterface.style.display = "flex";
+            modelNameDisplay.textContent = `Gemini AI (${currentModel})`;
+        } else {
+            statusMsg.textContent = "驗證失敗：金鑰無效或無法連線，請檢查 API Key。";
+            startBtn.disabled = false;
+            startBtn.textContent = "連線";
+        }
+    }
+
+    // 2. 顯示訊息功能
+    function appendMessage(text, sender) {
+        const div = document.createElement('div');
+        div.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
+        
+        // 簡單的 Markdown 處理 (粗體與換行)
+        let formattedText = text
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+            .replace(/\n/g, '<br>');
+            
+        div.innerHTML = formattedText;
+        chatBox.appendChild(div);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
+    // 3. 發送訊息功能
     async function sendMessage() {
-        const message = userInput.value.trim();
-        if (message === '') return;
+        const text = userInput.value.trim();
+        if (!text) return;
 
-        addMessage(message, 'user');
+        appendMessage(text, 'user');
         userInput.value = '';
-        sendButton.disabled = true; // 您原本的程式碼斷在這裡
+        loadingIndicator.style.display = 'block';
+        sendBtn.disabled = true;
 
         try {
-            // --- 這是您缺少的關鍵部分 Start ---
-            const response = await fetch(API_ENDPOINT, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${currentKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({ contents: [{ parts: [{ text: text }] }] })
             });
 
-            if (!response.ok) throw new Error('API 回應錯誤');
-
             const data = await response.json();
-            // 嘗試讀取不同的回傳欄位，避免格式不同導致錯誤
-            const reply = data.reply || data.text || data.message || "收到空白回應";
-            addMessage(reply, 'ai');
-            // --- 這是您缺少的關鍵部分 End ---
+            
+            if (!response.ok) {
+                throw new Error(data.error?.message || "API Error");
+            }
+
+            const reply = data.candidates[0].content.parts[0].text;
+            appendMessage(reply, 'ai');
 
         } catch (error) {
-            console.error(error);
-            addMessage('發生錯誤：無法連線到 AI (可能是網址失效了)', 'ai');
+            appendMessage(`發生錯誤：${error.message}`, 'ai');
         } finally {
-            sendButton.disabled = false;
+            loadingIndicator.style.display = 'none';
+            sendBtn.disabled = false;
             userInput.focus();
         }
     }
 
-    sendButton.addEventListener('click', sendMessage);
+    // 事件綁定
+    startBtn.addEventListener('click', validateAndStart);
+    sendBtn.addEventListener('click', sendMessage);
     userInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendMessage();
     });
 </script>
-     
+
+</body>
+</html>
 
    
       <h2>聯絡我們</h2>
