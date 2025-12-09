@@ -1,10 +1,1 @@
-{
-  "name": "gemini-chat-vercel",
-  "version": "1.14.0",
-  "description": "Gemini Chat API via Vercel Serverless Function",
-  "main": "api/chat.js",
-  "type": "module", 
-  "dependencies": {
-    "@google/genai": "1.14.0" 
-  }
-}
+
