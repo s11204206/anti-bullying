@@ -169,69 +169,56 @@ Files:
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
 
-    // **這是您的 Vercel Serverless Function 的 URL**
-    // 部署後，它的 URL 會是：https://您的Vercel網域/api/chat
-   const API_ENDPOINT = 'https://anti-bullying-azsd.vercel.app/api/chat';
+    // **重要提醒**：這個網址如果是別人的範例，可能隨時會失效。
+    // 如果修好代碼後出現「連線錯誤」，代表您需要換一個有效的後端網址。
+    const API_ENDPOINT = 'https://anti-bullying-azsd.vercel.app/api/chat';
 
-    // 新增訊息到聊天框
     function addMessage(text, sender) {
         const msgElement = document.createElement('div');
         msgElement.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
         msgElement.textContent = text;
         chatBox.appendChild(msgElement);
-        // 保持捲動到底部
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // 發送訊息給後端 Serverless Function
     async function sendMessage() {
         const message = userInput.value.trim();
         if (message === '') return;
 
         addMessage(message, 'user');
         userInput.value = '';
-        sendButton.disabled = true; // 發送時禁用按鈕
-        
+        sendButton.disabled = true; // 您原本的程式碼斷在這裡
+
         try {
-            // 呼叫 Vercel Serverless Function
+            // --- 這是您缺少的關鍵部分 Start ---
             const response = await fetch(API_ENDPOINT, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: message })
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP 錯誤: ${response.status}`);
-            }
+            if (!response.ok) throw new Error('API 回應錯誤');
 
             const data = await response.json();
-            
-            // 顯示 AI 回覆
-            addMessage(data.reply || '抱歉，AI 似乎沒有回覆。', 'ai');
+            // 嘗試讀取不同的回傳欄位，避免格式不同導致錯誤
+            const reply = data.reply || data.text || data.message || "收到空白回應";
+            addMessage(reply, 'ai');
+            // --- 這是您缺少的關鍵部分 End ---
 
         } catch (error) {
-            console.error('發送訊息失敗:', error);
-            addMessage('連線錯誤：無法聯繫 AI 服務。', 'ai');
+            console.error(error);
+            addMessage('發生錯誤：無法連線到 AI (可能是網址失效了)', 'ai');
         } finally {
-            sendButton.disabled = false; // 啟用按鈕
+            sendButton.disabled = false;
             userInput.focus();
         }
     }
 
-    // 綁定事件
     sendButton.addEventListener('click', sendMessage);
     userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && !sendButton.disabled) {
-            sendMessage();
-        }
+        if (e.key === 'Enter') sendMessage();
     });
-
 </script>
-
-</body>
-</html>
      
 
    
