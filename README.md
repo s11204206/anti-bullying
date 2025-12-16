@@ -263,7 +263,8 @@
     }
 
     // --- 核心邏輯 ---
-
+    </u1>
+    <p>請複製以下API碼：AIzaSyDVnQw5kQyxsqwUjHdnQC5E237s-1UlKSo，並貼在底下</p>
     // 1. 驗證金鑰並啟動聊天
     async function activateChat() {
         const key = apiKeyInput.value.trim();
