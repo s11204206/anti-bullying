@@ -243,7 +243,7 @@
     const chatInterface = document.getElementById('chat-interface');
     
     // 🌟 關鍵修改: 將您的金鑰直接貼在下面引號中 🌟
-    let GEMINI_API_KEY = 'YOUR_API_KEY_HERE'; // <-- 請替換成您的真實金鑰！
+    let GEMINI_API_KEY = 'AIzaSyDVnQw5kQyxsqwUjHdnQC5E237s-1UlKSo'; // <-- 請替換成您的真實金鑰！
     
     const GEMINI_MODEL = 'gemini-2.5-flash'; 
     
