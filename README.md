@@ -215,7 +215,6 @@
                 </div>
             </div>
         </div>
-    </section>
 
     <section id="contact" class="card">
       <h2>聯絡我們</h2>
