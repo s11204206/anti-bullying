@@ -233,23 +233,20 @@
 
   <script src="script.js"></script>
   <script>
-    // 專案所需的元素
+   // 專案所需的元素
     const chatBox = document.getElementById('chat-box');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
 
-    // 金鑰設定所需的元素
+    // 金鑰設定所需的元素 (現在不再使用)
     const keyConfigPanel = document.getElementById('key-config-panel');
-    const apiKeyInput = document.getElementById('api-key-input');
-    const keySubmitBtn = document.getElementById('key-submit-btn');
-    const statusMessage = document.getElementById('status-message');
     const chatInterface = document.getElementById('chat-interface');
     
-    // 全域變數來儲存金鑰
-    let GEMINI_API_KEY = '';
-    // 建議使用 gemini-2.5-flash 作為快速聊天模型
+    // 🌟 關鍵修改: 將您的金鑰直接貼在下面引號中 🌟
+    let GEMINI_API_KEY = 'YOUR_API_KEY_HERE'; // <-- 請替換成您的真實金鑰！
+    
     const GEMINI_MODEL = 'gemini-2.5-flash'; 
-
+    
     // --- 輔助函式 ---
 
     // 新增訊息到聊天框
@@ -262,52 +259,8 @@
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // --- 核心邏輯 ---
+    // --- 核心邏輯 (發送訊息給 Gemini API) ---
 
-    // 1. 驗證金鑰並啟動聊天
-    async function activateChat() {
-        const key = apiKeyInput.value.trim();
-        if (!key) {
-            statusMessage.textContent = '請貼入您的 Gemini API Key！';
-            return;
-        }
-
-        keySubmitBtn.disabled = true;
-        statusMessage.textContent = '驗證中...';
-
-        // 簡單測試金鑰是否有效 (透過呼叫 models API)
-        try {
-            // 嘗試呼叫 API 檢查金鑰有效性
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
-            
-            if (response.ok) {
-                // 驗證成功
-                GEMINI_API_KEY = key;
-                statusMessage.textContent = '連線成功！您可以開始聊天了。';
-                
-                // 隱藏設定面板，顯示聊天介面
-                keyConfigPanel.style.display = 'none';
-                chatInterface.style.display = 'flex';
-                userInput.disabled = false;
-                sendButton.disabled = false;
-                userInput.focus();
-                
-                // 清除初始訊息並發送歡迎語
-                chatBox.innerHTML = '';
-                addMessage('哈囉！我是您的 AI 助手，請問有什麼可以為您服務的嗎？', 'ai');
-
-            } else {
-                // 驗證失敗 (例如 400 Bad Request, 401 Unauthorized)
-                const data = await response.json();
-                throw new Error(data.error?.message || `API Key 無效或連線錯誤 (${response.status})`);
-            }
-        } catch (error) {
-            statusMessage.textContent = `連線失敗: ${error.message}`;
-            keySubmitBtn.disabled = false;
-        }
-    }
-
-    // 2. 發送訊息給 Gemini API
     async function sendMessage() {
         const message = userInput.value.trim();
         if (message === '' || !GEMINI_API_KEY) return;
@@ -319,7 +272,6 @@
 
         try {
             // 直接呼叫 Google Gemini API
-            // 由於這是一個新的對話，我們將使用 generateContent 而非 Chat Service (除非您自行實作 history 記憶)
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -351,15 +303,9 @@
         }
     }
 
-    // --- 事件綁定 ---
-
-    // 金鑰連線按鈕
-    keySubmitBtn.addEventListener('click', activateChat);
-    apiKeyInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') activateChat();
-    });
-
-    // 聊天發送按鈕
+    // --- 事件綁定與自動啟動邏輯 ---
+    
+    // 聊天發送按鈕
     sendButton.addEventListener('click', sendMessage);
     userInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && !sendButton.disabled) {
@@ -367,9 +313,33 @@
         }
     });
 
-    // 設置年份
+    // 設置年份 (保持不變)
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    // 🌟 自動啟動聊天功能 🌟
+    // 在網頁載入時立即啟用輸入框和按鈕，並發送初始訊息
+    document.addEventListener('DOMContentLoaded', () => {
+        // 確保聊天介面顯示
+        if (chatInterface) {
+            chatInterface.style.display = 'flex';
+        }
+        // 隱藏金鑰面板 (如果 HTML 中沒有移除的話)
+        if (keyConfigPanel) {
+            keyConfigPanel.style.display = 'none';
+        }
+
+        userInput.disabled = false;
+        sendButton.disabled = false;
+        userInput.placeholder = '請輸入您的訊息...'; // 確保提示文字正確
+
+        // 清除預設訊息並發送歡迎語
+        if (chatBox) {
+            chatBox.innerHTML = '';
+            addMessage('哈囉！我是您的 AI 助手，請問有什麼可以為您服務的嗎？', 'ai');
+        }
+        
+        userInput.focus();
+    });
   </script>
 </body>
 </html>
