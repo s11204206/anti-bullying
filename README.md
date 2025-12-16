@@ -188,6 +188,8 @@
         <section id="chat" class="card">
       <h2>線上支援聊天機器人</h2>
       <p>跟我們的 AI 聊天機器人聊聊你的困擾（提示：不要在對話中提供個人敏感資料）。</p>
+      <h2>
+       <p>請複製以下API碼：AIzaSyDVnQw5kQyxsqwUjHdnQC5E237s-1UlKSo，並貼在底下</p>
         
         <div id="chat-widget">
             <div id="key-config-panel">
@@ -263,8 +265,7 @@
     }
 
     // --- 核心邏輯 ---
-    </u1>
-    <p>請複製以下API碼：AIzaSyDVnQw5kQyxsqwUjHdnQC5E237s-1UlKSo，並貼在底下</p>
+   
     // 1. 驗證金鑰並啟動聊天
     async function activateChat() {
         const key = apiKeyInput.value.trim();
