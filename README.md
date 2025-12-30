@@ -94,69 +94,78 @@
         <p id="report-result" class="muted"></p>
       </form>
     </section>
-<style>
-       // script.js - 聊天機器人邏輯
+
+   
+</div> 
+<div id="chat-widget">
+    <div class="chat-header">
+        <strong>Gemini 智慧助手</strong>
+        <span class="status-online">● 線上</span>
+    </div>
+    </div>
+    <div id="chat-box" style="height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #fff;">
+</div>
+</div>
+    <div class="input-area" style="display: flex; margin-top: 10px;">
+        <input type="text" id="user-input" placeholder="請輸入訊息..." style="flex-grow: 1; padding: 10px;">
+        <button id="send-button" style="padding: 10px 20px;">發送</button>
+    </div>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
     const chatBox = document.getElementById('chat-box');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
 
-    // 添加訊息到介面的函式
-    function addMessage(text, sender) {
+function addMessage(text, sender) {
         const msgElement = document.createElement('div');
-        msgElement.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
-        msgElement.textContent = text;
+        msgElement.style.margin = "10px 0";
+        msgElement.style.padding = "8px 12px";
+        msgElement.style.borderRadius = "10px";
+        msgElement.style.maxWidth = "80%";
+        
+if (sender === 'user') {
+            msgElement.style.backgroundColor = "#D6EAF8";
+            msgElement.style.marginLeft = "auto";
+        } else {
+            msgElement.style.backgroundColor = "#EAECEE";
+        }
+        
+msgElement.textContent = text;
         chatBox.appendChild(msgElement);
-        chatBox.scrollTop = chatBox.scrollHeight; // 自動捲動到底部
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // 發送訊息給後端 API (Vercel)
-    async function sendMessage() {
+async function sendMessage() {
         const message = userInput.value.trim();
         if (message === '') return;
 
-        // 1. 顯示使用者訊息
-        addMessage(message, 'user');
+addMessage(message, 'user');
         userInput.value = '';
         sendButton.disabled = true;
-        userInput.disabled = true;
 
-        try {
-            // 🌟 重要修改：呼叫您自己的 Vercel 後端 API，不要直接呼叫 Google
+try {
+            // 注意：這裡呼叫的是您在 Vercel 上的後端 API 路徑
             const response = await fetch('/api/gemini', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: message })
             });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || '連線失敗');
-            }
-
-            // 2. 顯示 AI 回應
+const data = await response.json();
+            if (!response.ok) throw new Error(data.error || '連線失敗');
             addMessage(data.reply, 'ai');
-
         } catch (error) {
-            console.error('Error:', error);
             addMessage('❌ 錯誤：' + error.message, 'ai');
         } finally {
             sendButton.disabled = false;
-            userInput.disabled = false;
-            userInput.focus();
         }
     }
 
-    // 事件監聽
-    sendButton.addEventListener('click', sendMessage);
-    userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
-    });
-
-    // 初始歡迎詞
-    addMessage('您好！我是您的 AI 助手。無論是遇到霸凌問題需要傾訴，或是技術上的疑問，我都在這裡聽你說。', 'ai');
+sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+    addMessage('您好！我是您的 AI 助手，請問有什麼我可以幫您的嗎？', 'ai');
 });
+</script>
 <ul>
 
 <li>Email: <a href="mailto:anti.bullying.phone1999@gmail.com">anti.bullying.phone1999@gmail.com</a></li>
