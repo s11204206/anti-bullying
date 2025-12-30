@@ -219,9 +219,13 @@
       <h2>聯絡我們</h2>
       <p>若需要協助或想合作，請透過以下方式聯絡。</p>
       <ul>
-        <li>Email: <a href="mailto:help@example.org">help@example.org</a></li>
+
+        <li>Email: <a href="mailto:anti.bullying.phone1999@gmail.com">anti.bullying.phone1999@gmail.com</a></li>
+
         <li>社群媒體：<a href="#">Facebook</a> / <a href="#">Instagram</a></li>
+
       </ul>
+       
     </section>
   </main>
 
@@ -233,153 +237,8 @@
 
   <script src="script.js"></script>
   <script>
-    // 專案所需的元素
-    const chatBox = document.getElementById('chat-box');
-    const userInput = document.getElementById('user-input');
-    const sendButton = document.getElementById('send-button');
-
-    // 金鑰設定所需的元素
-    const keyConfigPanel = document.getElementById('key-config-panel');
-    const apiKeyInput = document.getElementById('api-key-input');
-    const keySubmitBtn = document.getElementById('key-submit-btn');
-    const statusMessage = document.getElementById('status-message');
-    const chatInterface = document.getElementById('chat-interface');
-    
-    // 全域變數來儲存金鑰
-    let GEMINI_API_KEY = '';
-    // 建議使用 gemini-2.5-flash 作為快速聊天模型
-    const GEMINI_MODEL = 'gemini-2.5-flash'; 
-
-    // --- 輔助函式 ---
-
-    // 新增訊息到聊天框
-    function addMessage(text, sender) {
-        const msgElement = document.createElement('div');
-        msgElement.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
-        msgElement.textContent = text;
-        chatBox.appendChild(msgElement);
-        // 保持捲動到底部
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    // --- 核心邏輯 ---
-
-    // 1. 驗證金鑰並啟動聊天
-    async function activateChat() {
-        const key = apiKeyInput.value.trim();
-        if (!key) {
-            statusMessage.textContent = '請貼入您的 Gemini API Key！';
-            return;
-        }
-
-        keySubmitBtn.disabled = true;
-        statusMessage.textContent = '驗證中...';
-
-        // 簡單測試金鑰是否有效 (透過呼叫 models API)
-        try {
-            // 嘗試呼叫 API 檢查金鑰有效性
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
-            
-            if (response.ok) {
-                // 驗證成功
-                GEMINI_API_KEY = key;
-                statusMessage.textContent = '連線成功！您可以開始聊天了。';
-                
-                // 隱藏設定面板，顯示聊天介面
-                keyConfigPanel.style.display = 'none';
-                chatInterface.style.display = 'flex';
-                userInput.disabled = false;
-                sendButton.disabled = false;
-                userInput.focus();
-                
-                // 清除初始訊息並發送歡迎語
-                chatBox.innerHTML = '';
-                addMessage('哈囉！我是您的 AI 助手，請問有什麼可以為您服務的嗎？', 'ai');
-
-            } else {
-                // 驗證失敗 (例如 400 Bad Request, 401 Unauthorized)
-                const data = await response.json();
-                throw new Error(data.error?.message || `API Key 無效或連線錯誤 (${response.status})`);
-            }
-        } catch (error) {
-            statusMessage.textContent = `連線失敗: ${error.message}`;
-            keySubmitBtn.disabled = false;
-        }
-    }
-
-    // 2. 發送訊息給 Gemini API
-    async function sendMessage() {
-        const message = userInput.value.trim();
-        if (message === '' || !GEMINI_API_KEY) return;
-
-        addMessage(message, 'user');
-        userInput.value = '';
-        sendButton.disabled = true; 
-        userInput.disabled = true;
-
-        try {
-            // 直接呼叫 Google Gemini API
-            // 由於這是一個新的對話，我們將使用 generateContent 而非 Chat Service (除非您自行實作 history 記憶)
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    contents: [{ parts: [{ text: message }] }] 
-                })
-            });
-
-            const data = await response.json();
-            
-            if (!response.ok) {
-                // 處理 API 錯誤
-                throw new Error(data.error?.message || `HTTP 錯誤: ${response.status}`);
-            }
-            
-            // 從回應中提取文字
-            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-            
-            // 顯示 AI 回覆
-            addMessage(reply || '抱歉，AI 似乎沒有回覆。', 'ai');
-
-        } catch (error) {
-            console.error('發送訊息失敗:', error);
-            addMessage(`連線錯誤：無法聯繫 AI 服務。詳細錯誤: ${error.message}`, 'ai');
-        } finally {
-            sendButton.disabled = false; 
-            userInput.disabled = false;
-            userInput.focus();
-        }
-    }
-
-    // --- 事件綁定 ---
-
-    // 金鑰連線按鈕
-    keySubmitBtn.addEventListener('click', activateChat);
-    apiKeyInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') activateChat();
-    });
-
-    // 聊天發送按鈕
-    sendButton.addEventListener('click', sendMessage);
-    userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && !sendButton.disabled) {
-            sendMessage();
-        }
-    });
-
-    // 設置年份
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-  </script>
-</body>
-</html>
-      <ul>
-
-        <li>Email: <a href="mailto:anti.bullying.phone1999@gmail.com">anti.bullying.phone1999@gmail.com</a></li>
-
-        <li>社群媒體：<a href="#">Facebook</a> / <a href="#">Instagram</a></li>
-
-      </ul>
+   
+     
 </script>
 </body>
 </html>
