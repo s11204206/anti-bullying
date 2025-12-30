@@ -96,74 +96,73 @@
     </section>
 
    
-</div> 
-<div id="chat-widget">
-    <div class="chat-header">
-        <strong>Gemini 智慧助手</strong>
-        <span class="status-online">● 線上</span>
+<section id="chat" class="card">
+  <h2>線上支援聊天機器人</h2>
+  <div id="chat-widget" style="border: 1px solid #ccc; border-radius: 10px; overflow: hidden; background: #f9f9f9;">
+    <div style="background: #4A90E2; color: white; padding: 10px; font-weight: bold;">
+      Gemini 智慧助手 ● 線上
     </div>
+    <div id="chat-box" style="height: 300px; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: white;">
+      </div>
+    <div style="padding: 10px; display: flex; gap: 5px; border-top: 1px solid #eee;">
+      <input type="text" id="user-input" placeholder="請輸入訊息..." style="flex-grow: 1; padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+      <button id="send-button" style="background: #4A90E2; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">發送</button>
     </div>
-    <div id="chat-box" style="height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #fff;">
-</div>
-</div>
-    <div class="input-area" style="display: flex; margin-top: 10px;">
-        <input type="text" id="user-input" placeholder="請輸入訊息..." style="flex-grow: 1; padding: 10px;">
-        <button id="send-button" style="padding: 10px 20px;">發送</button>
-    </div>
+  </div>
+</section>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const chatBox = document.getElementById('chat-box');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
 
-function addMessage(text, sender) {
-        const msgElement = document.createElement('div');
-        msgElement.style.margin = "10px 0";
-        msgElement.style.padding = "8px 12px";
-        msgElement.style.borderRadius = "10px";
-        msgElement.style.maxWidth = "80%";
-        
-if (sender === 'user') {
-            msgElement.style.backgroundColor = "#D6EAF8";
-            msgElement.style.marginLeft = "auto";
+    function addMessage(text, sender) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        div.style.padding = "8px 12px";
+        div.style.borderRadius = "15px";
+        div.style.maxWidth = "80%";
+        if (sender === 'user') {
+            div.style.alignSelf = "flex-end";
+            div.style.background = "#D6EAF8";
         } else {
-            msgElement.style.backgroundColor = "#EAECEE";
+            div.style.alignSelf = "flex-start";
+            div.style.background = "#EAECEE";
         }
-        
-msgElement.textContent = text;
-        chatBox.appendChild(msgElement);
+        chatBox.appendChild(div);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-async function sendMessage() {
-        const message = userInput.value.trim();
-        if (message === '') return;
+    async function sendMessage() {
+        const msg = userInput.value.trim();
+        if (!msg) return;
 
-addMessage(message, 'user');
+        addMessage(msg, 'user');
         userInput.value = '';
-        sendButton.disabled = true;
 
-try {
-            // 注意：這裡呼叫的是您在 Vercel 上的後端 API 路徑
-            const response = await fetch('/api/gemini', {
+        try {
+            // 呼叫您在 Vercel 上的 API 路徑
+            const res = await fetch('/api/gemini', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({ message: msg })
             });
 
-const data = await response.json();
-            if (!response.ok) throw new Error(data.error || '連線失敗');
-            addMessage(data.reply, 'ai');
-        } catch (error) {
-            addMessage('❌ 錯誤：' + error.message, 'ai');
-        } finally {
-            sendButton.disabled = false;
+            const data = await res.json();
+            if (data.reply) {
+                addMessage(data.reply, 'ai');
+            } else {
+                addMessage("錯誤: " + (data.error || "未知錯誤"), 'ai');
+            }
+        } catch (e) {
+            addMessage("連線失敗，請稍後再試", 'ai');
         }
     }
 
-sendButton.addEventListener('click', sendMessage);
-    userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-    addMessage('您好！我是您的 AI 助手，請問有什麼我可以幫您的嗎？', 'ai');
+    sendButton.onclick = sendMessage;
+    userInput.onkeypress = (e) => { if(e.key === 'Enter') sendMessage(); };
+    addMessage("您好！我是您的 AI 助手，有什麼我可以幫您的嗎？", "ai");
 });
 </script>
 <ul>
