@@ -1,4 +1,4 @@
-幫我全改成Javascript<!doctype html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
@@ -7,137 +7,97 @@
   <link rel="stylesheet" href="styles.css">
   <meta name="description" content="反霸凌資訊、通報、支援與教育資源。">
 
-   <style>
-/* 這是您原有網站的基礎排版 */
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; }
-.card { background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); padding: 25px; margin-bottom: 25px; }
+        <style>
+        /* 聊天介面樣式 - 🌟 已優化 🌟 */
+        #chat-widget { 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            max-width: 100%; /* 確保滿版 */
+            display: flex; 
+            flex-direction: column; 
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* 增加陰影 */
+        }
+        .chat-header { 
+            padding: 15px; 
+            background-color: #4A90E2; 
+            color: white; 
+            font-weight: bold; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+        }
+        
+        /* 關鍵修改：固定高度並啟用滾動 */
+        #chat-box { 
+            flex-grow: 1; 
+            padding: 15px; 
+            overflow-y: auto; /* 啟用垂直滾動條 */
+            border-bottom: 1px solid #eee; 
+            background-color: #ffffff; /* 聊天背景色 */
+            height: 380px; /* 設定固定高度 */
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 訊息氣泡優化 */
+        .message { 
+            margin-bottom: 10px; 
+            padding: 10px 14px; /* 增加內邊距 */
+            border-radius: 18px; /* 更加圓潤 */
+            max-width: 85%; /* 增加最大寬度 */
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+        .user-message { 
+            background-color: #D6EAF8; 
+            margin-left: auto; 
+            text-align: left; /* 讓文字左對齊 */
+            border-bottom-right-radius: 5px; /* 右下角微調 */
+        }
+        .ai-message { 
+            background-color: #EAECEE; 
+            margin-right: auto; 
+            text-align: left; 
+            border-bottom-left-radius: 5px; /* 左下角微調 */
+        }
+        .input-area { display: flex; padding: 10px; border-top: 1px solid #eee; background-color: #fff; }
+        #user-input { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 20px; margin-right: 10px; font-size: 16px; }
+        #send-button { padding: 10px 18px; background-color: #4A90E2; color: white; border: none; border-radius: 20px; cursor: pointer; transition: background-color 0.3s; }
+        #send-button:hover:not(:disabled) { background-color: #357ABD; }
+        #send-button:disabled { background-color: #AAB7B8; cursor: not-allowed; }
 
-
-/* 🌟 聊天機器人專用 CSS - 追求現代與簡潔 🌟 */
-
-/* 整個聊天框的外容器 */
-#chat-widget { 
-    border: none; /* 移除邊框，依靠陰影和卡片圓角 */
-    border-radius: 12px; 
-    overflow: hidden; 
-    max-width: 100%; 
-    display: flex; 
-    flex-direction: column; 
-    margin-top: 15px; 
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* 較明顯的陰影 */
-}
-
-/* 聊天室標頭 (深藍色/漸變) */
-.chat-header { 
-    padding: 15px 20px; 
-    background: linear-gradient(135deg, #007bff, #0056b3); /* 藍色漸變 */
-    color: white; 
-    font-weight: 600; /* 較粗的字體 */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.1em; 
-}
-.chat-header span:last-child {
-    background-color: #28a745; /* 線上狀態 (綠色) */
-    padding: 3px 10px;
-    border-radius: 15px;
-    font-size: 0.8em;
-    font-weight: normal;
-}
-
-/* 聊天內容區域 */
-#chat-box { 
-    flex-grow: 1; 
-    padding: 15px 20px; 
-    overflow-y: auto; 
-    background-color: #f7f9fc; /* 非常淺的藍色背景，增加層次 */
-    height: 380px; 
-    display: flex; 
-    flex-direction: column;
-}
-
-/* 訊息氣泡通用樣式 */
-.message { 
-    margin-bottom: 12px; 
-    padding: 12px 16px; 
-    border-radius: 20px; /* 更圓潤 */
-    max-width: 80%; 
-    line-height: 1.4;
-    font-size: 0.95em;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* 輕微氣泡陰影 */
-}
-
-/* 使用者訊息氣泡 (您的訊息 - 突出且乾淨) */
-.user-message { 
-    background-color: #007bff; /* 鮮明的藍色 */
-    color: white; /* 白色文字 */
-    margin-left: auto; 
-    text-align: left; 
-    border-bottom-right-radius: 5px; /* 增加箭頭感 */
-}
-
-/* AI 訊息氣泡 (助手訊息 - 乾淨且中性) */
-.ai-message { 
-    background-color: #ffffff; /* 白色背景 */
-    color: #333; /* 深色文字 */
-    margin-right: auto; 
-    text-align: left; 
-    border: 1px solid #eee; /* 細微邊框 */
-    border-bottom-left-radius: 5px; 
-}
-
-/* 輸入區塊 */
-.input-area { 
-    display: flex; 
-    padding: 15px 20px; 
-    border-top: 1px solid #eee; 
-    background-color: #fff; 
-    align-items: center;
-}
-
-#user-input { 
-    flex-grow: 1; 
-    padding: 12px 18px; 
-    border: 1px solid #ced4da; /* 柔和邊框 */
-    border-radius: 25px; /* 完全圓角 */
-    margin-right: 15px; 
-    font-size: 16px;
-    transition: border-color 0.3s;
-}
-#user-input:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-#send-button { 
-    padding: 10px 20px; 
-    background-color: #007bff; /* 主要行動藍 */
-    color: white; 
-    border: none; 
-    border-radius: 25px; /* 完全圓角 */
-    cursor: pointer; 
-    font-weight: 600;
-    transition: background-color 0.3s, transform 0.1s; 
-}
-
-#send-button:hover:not(:disabled) { 
-    background-color: #0056b3; 
-    transform: translateY(-1px); /* 輕微抬升動畫 */
-}
-#send-button:disabled { background-color: #AAB7B8; cursor: not-allowed; }
-
-/* 金鑰輸入面板樣式 (可沿用舊有樣式，但優化顏色) */
-#key-submit-btn {
-    padding: 10px 15px;
-    background-color: #28a745; /* 成功/連線用綠色 */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-</style>
+        /* 金鑰輸入面板樣式 - 保持不變 */
+        #key-config-panel {
+            padding: 15px;
+            text-align: center;
+            background-color: #fff;
+        }
+        #api-key-input {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-right: 10px;
+        }
+        #key-submit-btn {
+            padding: 10px 15px;
+            background-color: #17A2B8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        /* 聊天介面控制 */
+        #chat-interface { 
+            display: none; 
+            flex-direction: column; 
+            flex-grow: 1; 
+            height: 100%; /* 讓它填滿 #chat-widget */
+        }
+    </style>
 </head>
 <body>
   <header class="site-header">
@@ -228,10 +188,191 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
         <section id="chat" class="card">
       <h2>線上支援聊天機器人</h2>
       <p>跟我們的 AI 聊天機器人聊聊你的困擾（提示：不要在對話中提供個人敏感資料）。</p>
-      <h2>
-       
+        
+        <div id="chat-widget">
+            <div id="key-config-panel">
+                <h3 style="margin-top: 0;">連線 Gemini AI</h3>
+                <p style="font-size: 14px; color: #666;">請輸入您的 Google Gemini API Key 以開始對話。</p>
+                <input type="password" id="api-key-input" placeholder="貼上 AIzaSy... 開頭的金鑰">
+                <button id="key-submit-btn">連線</button>
+                <p id="status-message" style="color: red; font-size: 12px; margin-top: 10px;"></p>
+            </div>
 
+            <div id="chat-interface">
+                                <div class="chat-header">
+                    <span>Gemini 智慧助手</span>
+                    <span style="font-size: 12px; background-color: #28a745; padding: 2px 8px; border-radius: 10px;">線上</span>
+                </div>
+                
+                <div id="chat-box">
+                    <div class="message ai-message">請點擊上方 **連線** 按鈕並輸入金鑰，即可啟動 AI 支援。</div>
+                </div>
+                <div class="input-area">
+                    <input type="text" id="user-input" placeholder="請輸入您的訊息..." disabled>
+                    <button id="send-button" disabled>發送</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <section id="contact" class="card">
+      <h2>聯絡我們</h2>
+      <p>若需要協助或想合作，請透過以下方式聯絡。</p>
+      <ul>
+        <li>Email: <a href="mailto:help@example.org">help@example.org</a></li>
+        <li>社群媒體：<a href="#">Facebook</a> / <a href="#">Instagram</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> 反霸凌資源中心 · 版權所有</p>
+        </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // 專案所需的元素
+    const chatBox = document.getElementById('chat-box');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+
+    // 金鑰設定所需的元素
+    const keyConfigPanel = document.getElementById('key-config-panel');
+    const apiKeyInput = document.getElementById('api-key-input');
+    const keySubmitBtn = document.getElementById('key-submit-btn');
+    const statusMessage = document.getElementById('status-message');
+    const chatInterface = document.getElementById('chat-interface');
+    
+    // 全域變數來儲存金鑰
+    let GEMINI_API_KEY = '';
+    // 建議使用 gemini-2.5-flash 作為快速聊天模型
+    const GEMINI_MODEL = 'gemini-2.5-flash'; 
+
+    // --- 輔助函式 ---
+
+    // 新增訊息到聊天框
+    function addMessage(text, sender) {
+        const msgElement = document.createElement('div');
+        msgElement.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
+        msgElement.textContent = text;
+        chatBox.appendChild(msgElement);
+        // 保持捲動到底部
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // --- 核心邏輯 ---
+
+    // 1. 驗證金鑰並啟動聊天
+    async function activateChat() {
+        const key = apiKeyInput.value.trim();
+        if (!key) {
+            statusMessage.textContent = '請貼入您的 Gemini API Key！';
+            return;
+        }
+
+        keySubmitBtn.disabled = true;
+        statusMessage.textContent = '驗證中...';
+
+        // 簡單測試金鑰是否有效 (透過呼叫 models API)
+        try {
+            // 嘗試呼叫 API 檢查金鑰有效性
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+            
+            if (response.ok) {
+                // 驗證成功
+                GEMINI_API_KEY = key;
+                statusMessage.textContent = '連線成功！您可以開始聊天了。';
+                
+                // 隱藏設定面板，顯示聊天介面
+                keyConfigPanel.style.display = 'none';
+                chatInterface.style.display = 'flex';
+                userInput.disabled = false;
+                sendButton.disabled = false;
+                userInput.focus();
+                
+                // 清除初始訊息並發送歡迎語
+                chatBox.innerHTML = '';
+                addMessage('哈囉！我是您的 AI 助手，請問有什麼可以為您服務的嗎？', 'ai');
+
+            } else {
+                // 驗證失敗 (例如 400 Bad Request, 401 Unauthorized)
+                const data = await response.json();
+                throw new Error(data.error?.message || `API Key 無效或連線錯誤 (${response.status})`);
+            }
+        } catch (error) {
+            statusMessage.textContent = `連線失敗: ${error.message}`;
+            keySubmitBtn.disabled = false;
+        }
+    }
+
+    // 2. 發送訊息給 Gemini API
+    async function sendMessage() {
+        const message = userInput.value.trim();
+        if (message === '' || !GEMINI_API_KEY) return;
+
+        addMessage(message, 'user');
+        userInput.value = '';
+        sendButton.disabled = true; 
+        userInput.disabled = true;
+
+        try {
+            // 直接呼叫 Google Gemini API
+            // 由於這是一個新的對話，我們將使用 generateContent 而非 Chat Service (除非您自行實作 history 記憶)
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    contents: [{ parts: [{ text: message }] }] 
+                })
+            });
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+                // 處理 API 錯誤
+                throw new Error(data.error?.message || `HTTP 錯誤: ${response.status}`);
+            }
+            
+            // 從回應中提取文字
+            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            
+            // 顯示 AI 回覆
+            addMessage(reply || '抱歉，AI 似乎沒有回覆。', 'ai');
+
+        } catch (error) {
+            console.error('發送訊息失敗:', error);
+            addMessage(`連線錯誤：無法聯繫 AI 服務。詳細錯誤: ${error.message}`, 'ai');
+        } finally {
+            sendButton.disabled = false; 
+            userInput.disabled = false;
+            userInput.focus();
+        }
+    }
+
+    // --- 事件綁定 ---
+
+    // 金鑰連線按鈕
+    keySubmitBtn.addEventListener('click', activateChat);
+    apiKeyInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') activateChat();
+    });
+
+    // 聊天發送按鈕
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !sendButton.disabled) {
+            sendMessage();
+        }
+    });
+
+    // 設置年份
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+  </script>
+</body>
+</html>
       <ul>
 
         <li>Email: <a href="mailto:anti.bullying.phone1999@gmail.com">anti.bullying.phone1999@gmail.com</a></li>
