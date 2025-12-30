@@ -172,6 +172,4 @@ document.addEventListener('DOMContentLoaded', () => {
  <li>社群媒體：<a href="#">Facebook</a> / <a href="#">Instagram</a></li>
 
 </ul>
-</script>
-</body>
-</html>
+
