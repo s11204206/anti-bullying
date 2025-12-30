@@ -276,7 +276,7 @@
     const sendButton = document.getElementById('send-button');
 
     // 🌟 關鍵：直接嵌入金鑰 (請將下方文字換成你的 AIzaSy... 金鑰)
-    const GEMINI_API_KEY = 'AIzaSyDsmEkWmldasmUb4kWF0U0ewdNEuTtk6eo'; 
+
     const GEMINI_MODEL = 'gemini-1.5-flash';
 
     // 系統提示詞：設定 AI 的角色 (面試官/心理支持)
