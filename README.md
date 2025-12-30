@@ -223,7 +223,7 @@
         <li>Email: <a href="mailto:help@example.org">help@example.org</a></li>
         <li>社群媒體：<a href="#">Facebook</a> / <a href="#">Instagram</a></li>
       </ul>
-    </section>
+    
   </main>
 
   <footer class="site-footer">
