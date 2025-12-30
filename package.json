@@ -1,7 +1,5 @@
 {
   "name": "anti-bullying-site",
   "version": "1.0.0",
-  "dependencies": {
-    "@google/genai": "0.1.0"
-  }
+  "description": "Gemini AI Chatbot"
 }
