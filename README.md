@@ -338,7 +338,20 @@
         addMessage('您好！我是您的 AI 助手。無論是遇到霸凌問題需要傾訴，或是技術上的疑問，我都在這裡聽你說。', 'ai');
         userInput.focus();
     };
-</script>
 
+ <section id="contact" class="card">
+
+      <h2>聯絡我們</h2>
+
+      <p>若需要協助或想合作，請透過以下方式聯絡。</p>
+
+      <ul>
+
+        <li>Email: <a href="mailto:anti.bullying.phone1999@gmail.com">anti.bullying.phone1999@gmail.com</a></li>
+
+        <li>社群媒體：<a href="#">Facebook</a> / <a href="#">Instagram</a></li>
+
+      </ul>
+</script>
 </body>
 </html>
