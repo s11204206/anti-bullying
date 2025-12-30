@@ -220,7 +220,7 @@
       <h2>聯絡我們</h2>
       <p>若需要協助或想合作，請透過以下方式聯絡。</p>
       <ul>
-        <li>Email: <a href="mailto:anti.bullying.phone1999@gmail.com">help@example.org</a></li>
+        <li>Email: <a href="mailto:anti.bullying.phone1999@gmail.com">anti.bullying.phone1999@gmail.com</a></li>
         <li>社群媒體：<a href="#">Facebook</a> / <a href="#">Instagram</a></li>
       </ul>
     
