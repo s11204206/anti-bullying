@@ -1,17 +1,23 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
-// 這裡會自動去 Vercel 的環境變數抓取您剛剛設定的 GEMINI_API_KEY
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-
 export async function POST(req) {
   try {
     const { message } = await req.json();
+    
+    // 從 Vercel 環境變數讀取金鑰，避免洩漏
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    
+    // 使用正確的模型名稱
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
     const result = await model.generateContent(message);
     const response = await result.response;
-    return NextResponse.json({ reply: response.text() });
+    const text = response.text();
+
+    return NextResponse.json({ reply: text });
   } catch (error) {
-    return NextResponse.json({ error: "AI 連線失敗，請檢查金鑰設定" }, { status: 500 });
+    console.error("API Error:", error);
+    return NextResponse.json({ error: "AI 暫時無法連線" }, { status: 500 });
   }
 }
