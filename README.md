@@ -188,11 +188,19 @@ method="POST"
 </label>
 
 <label>是否願意提供聯絡方式？
-<select name="contactPref">
-<option value="no">不願意（匿名）</option>
-<option value="yes">願意（可提供Email或電話）</option>
-</select>
-</label>
+        <select name="contactPref" id="contact_choice"> <option value="no">不願意（匿名）</option>
+            <option value="yes">願意（可提供Email或電話）</option>
+        </select>
+    </label>
+
+    <div id="contact_info_fields" style="display: none;">
+        <label>您的 Email
+            <input type="email" id="email_input" placeholder="選填您的 Email">
+        </label>
+        <label>您的電話
+            <input type="tel" id="phone_input" placeholder="選填您的電話">
+        </label>
+    </div>
 
 <button type="submit">送出通報</button>
 <p id="report-result" class="muted"></p>
