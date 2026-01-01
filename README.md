@@ -97,8 +97,10 @@
             flex-grow: 1; 
             height: 100%; /* 讓它填滿 #chat-widget */
         }
-        
-        document.addEventListener('DOMContentLoaded', (event) => {
+     
+    </style>
+    <script>
+document.addEventListener('DOMContentLoaded', (event) => {
     const contactChoice = document.getElementById('contact_choice');
     const contactInfoFields = document.getElementById('contact_info_fields');
     const emailInput = document.getElementById('email_input');
@@ -136,7 +138,7 @@
     // 頁面載入時先執行一次，確保初始狀態 (預設為匿名) 正確
     toggleContactFields();
 });
-    </style>
+</script>
 </head>
 <body>
   <header class="site-header">
