@@ -97,6 +97,45 @@
             flex-grow: 1; 
             height: 100%; /* 讓它填滿 #chat-widget */
         }
+        
+        document.addEventListener('DOMContentLoaded', (event) => {
+    const contactChoice = document.getElementById('contact_choice');
+    const contactInfoFields = document.getElementById('contact_info_fields');
+    const emailInput = document.getElementById('email_input');
+    const phoneInput = document.getElementById('phone_input');
+    
+    // 定義 Formspree 提交時會用到的欄位名稱
+    const EMAIL_FIELD_NAME = '通報者Email';
+    const PHONE_FIELD_NAME = '通報者電話';
+
+    // 負責處理切換邏輯的函式
+    function toggleContactFields() {
+        if (contactChoice.value === 'yes') {
+            // 選擇「願意」：顯示欄位，並加上 name 屬性讓 Formspree 接收
+            contactInfoFields.style.display = 'block';
+            emailInput.name = EMAIL_FIELD_NAME;
+            phoneInput.name = PHONE_FIELD_NAME;
+        } else {
+            // 選擇「不願意/匿名」：隱藏欄位，清空值，並移除 name 屬性
+            contactInfoFields.style.display = 'none';
+
+            // 清空值：確保即使欄位隱藏，使用者上次填的值也不會被送出
+            emailInput.value = '';
+            phoneInput.value = '';
+
+            // 關鍵步驟：移除 name 屬性。
+            // 這樣在送出表單時，這些資料就不會被包含在 Formspree 的 payload 中。
+            emailInput.removeAttribute('name');
+            phoneInput.removeAttribute('name');
+        }
+    }
+
+    // 監聽選擇欄位的變化，一旦改變就執行切換邏輯
+    contactChoice.addEventListener('change', toggleContactFields);
+
+    // 頁面載入時先執行一次，確保初始狀態 (預設為匿名) 正確
+    toggleContactFields();
+});
     </style>
 </head>
 <body>
