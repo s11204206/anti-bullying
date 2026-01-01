@@ -170,19 +170,33 @@
       <h2>匿名通報</h2>
       <p>你可以匿名通報霸凌事件，我們會轉交合適的學校或輔導單位跟進。</p>
 
-      <form id="report-form">
-        <label>你要通報的學校/單位（選填）<input type="text" name="school" placeholder="例如：某某國中"></label>
-        <label>地點（選填）<input type="text" name="location" placeholder="例如：操場、社群平台"></label>
-        <label>事件描述<textarea name="desc" placeholder="請簡述發生的事（建議寫下時間、地點、當事人、目擊者）"></textarea></label>
-        <label>是否願意提供聯絡方式？
-          <select name="contactPref">
-            <option value="no">不願意（匿名）</option>
-            <option value="yes">願意（可提供Email或電話）</option>
-          </select>
-        </label>
-        <button type="submit">送出通報</button>
-        <p id="report-result" class="muted"></p>
-      </form>
+      <form
+id="report-form"
+action="  https://formspree.io/f/mojvvjvl "
+method="POST"
+>
+<label>你要通報的學校/單位（選填）
+<input type="text" name="school" placeholder="例如：某某國中">
+</label>
+
+<label>地點（選填）
+<input type="text" name="location" placeholder="例如：操場、社群平台">
+</label>
+
+<label>事件描述
+<textarea name="desc" placeholder="請簡述發生的事（建議寫下時間、地點、當事人、目擊者）"></textarea>
+</label>
+
+<label>是否願意提供聯絡方式？
+<select name="contactPref">
+<option value="no">不願意（匿名）</option>
+<option value="yes">願意（可提供Email或電話）</option>
+</select>
+</label>
+
+<button type="submit">送出通報</button>
+<p id="report-result" class="muted"></p>
+</form>
     </section>
 
         <section id="chat" class="card">
