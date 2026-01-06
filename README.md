@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>反霸凌通報及AI聊天系統之中心</title>
+  <title>反霸凌中心</title>
   <link rel="stylesheet" href="styles.css">
   <meta name="description" content="反霸凌資訊、通報、支援與教育資源。">
 
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 <body>
   <header class="site-header">
     <div class="container">
-      <h1>霸凌通報及AI聊天系統之中心</h1>
+      <h1>反霸凌中心</h1>
       <p class="tagline">關心每一個學生的安全與尊嚴</p>
       <nav>
         <a href="#about">關於我們</a>
@@ -195,6 +195,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         <article>
           <h3>立即求助</h3>
           <p>若遇到緊急危險，請立即撥打當地緊急電話。</p>
+          <p>反霸凌便民專線：直撥 1999 </p>
+          
         </article>
         <article>
           <h3>社工與諮商</h3>
@@ -294,7 +296,7 @@ method="POST"
 
   <footer class="site-footer">
     <div class="container">
-      <p>© <span id="year"></span> 霸凌通報及AI聊天系統之中心 · 版權所有</p>
+      <p>© <span id="year"></span> 反霸凌中心 · 版權所有</p>
         </div>
   </footer>
 
