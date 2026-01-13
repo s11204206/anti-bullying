@@ -8,7 +8,7 @@
   <meta name="description" content="反霸凌資訊、通報、支援與教育資源。">
 
         <style>
-        /* 聊天介面樣式 - 🌟 已優化 🌟 */
+        /* 聊天介面樣式 -  已優化  */
         #chat-widget { 
             border: 1px solid #ccc; 
             border-radius: 8px; 
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         <article>
           <h3>立即求助</h3>
           <p>若遇到緊急危險，請立即撥打當地緊急電話。</p>
-          <p>反霸凌便民專線：直撥 1999 </p>
+          <p>反霸凌便民專線：直撥 1953 </p>
           
         </article>
         <article>
