@@ -258,7 +258,7 @@ method="POST"
             <div id="key-config-panel">
                 <h3 style="margin-top: 0;">連線 Gemini AI</h3>
                 <p style="font-size: 14px; color: #666;">請輸入您的 Google Gemini API Key 以開始對話。</p>
-                <input type="password" id="api-key-input" placeholder="貼上 AIzaSy... 開頭的金鑰">
+                <input type="password" id="api-key-input" placeholder="貼上金鑰">
                 <button id="key-submit-btn">連線</button>
                 <p id="status-message" style="color: red; font-size: 12px; margin-top: 10px;"></p>
             </div>
@@ -318,6 +318,29 @@ method="POST"
     let GEMINI_API_KEY = '';
     // 建議使用 gemini-2.5-flash 作為快速聊天模型
     const GEMINI_MODEL = 'gemini-2.5-flash'; 
+    // AI 系統提示詞
+          const SYSTEM_PROMPT = `
+          你是一位反霸凌中心的 AI 助手。
+
+你的任務：
+          1. 提供友善、尊重且溫暖的回應。
+          2. 協助遭遇霸凌的學生、家長與老師。
+          3. 提供反霸凌資訊與建議。
+          4. 鼓勵尋求師長、家長、輔導老師或專業人員協助。
+          5. 不鼓勵任何暴力、報復、歧視或違法行為。
+          6. 若遇到緊急危險情況，提醒使用者立即尋求協助或撥打反霸凌專線1953。
+          7. 使用繁體中文回答。
+          8. 回答應簡單易懂、具同理心。
+
+如果使用者描述霸凌事件：
+          - 先表達理解與關心
+          - 再提供具體建議
+          - 鼓勵向可信任的大人求助
+
+如果使用者只是聊天：
+          - 保持友善自然
+          - 提供正向支持
+          `;
 
     // --- 輔助函式 ---
 
@@ -389,13 +412,25 @@ method="POST"
         try {
             // 直接呼叫 Google Gemini API
             // 由於這是一個新的對話，我們將使用 generateContent 而非 Chat Service (除非您自行實作 history 記憶)
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    contents: [{ parts: [{ text: message }] }] 
-                })
-            });
+const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
+    {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            contents: [{
+                parts: [{
+                    text: `${SYSTEM_PROMPT}
+
+使用者訊息：
+${message}`
+                }]
+            }]
+        })
+    }
+);
 
             const data = await response.json();
             
