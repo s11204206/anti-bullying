@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       <h1>反霸凌中心</h1>
       <p class="tagline">關心每一個學生的安全與尊嚴</p>
       <nav>
-        <a href="#about">關於我們</a>
+        <a href="#about">關於反霸凌</a>
         <a href="#resources">資源</a>
         <a href="#report">通報</a>
         <a href="#chat">聊天機器人</a>
